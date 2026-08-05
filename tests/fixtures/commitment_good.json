@@ -1,0 +1,16 @@
+{
+  "schema_version": "v1",
+  "action": "Send Marta the revised qualification test matrix",
+  "owner": {"kind": "unresolved", "raw_mention": "Alex"},
+  "evidence": [
+    {
+      "source_id": "SRC-0046",
+      "source_type": "transcript",
+      "location": "00:41:37",
+      "excerpt": "I'll get you the revised qualification test matrix by Friday."
+    }
+  ],
+  "due_text": "by Friday",
+  "confidence": 0.86,
+  "status": "proposed"
+}
