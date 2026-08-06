@@ -1,0 +1,6 @@
+tasks:
+  extraction:  {tier: local}
+  smoke_test:  {tier: frontier}
+tiers:
+  local:    {provider: ollama, model: "qwen3:8b"}
+  frontier: {provider: ollama, model: "qwen2.5:latest"}   # stand-in; real provider later

@@ -4,12 +4,13 @@ from pydantic import BaseModel, Field
 from .evidence import SourceEvidence
 from pydantic import model_validator
 from .owners import Owner
-
+from pydantic import ConfigDict
 class FounderVerdict(BaseModel):
     """ FR-09"""
     verdict : Literal["approved" , "edited" , "rejected" , "defferred"]
     reason : Optional[str] = None
     decided_at : datetime
+    model_config = ConfigDict(extra="forbid")
 
 class Commitment(BaseModel):
     """ One promise/request. FR-03,04,05,06,07,08,09"""
@@ -23,6 +24,7 @@ class Commitment(BaseModel):
     confidence : float = Field(ge = 0.0 , le = 1.0)
     status : Literal["proposed" , "approved" , "edited" , "rejected" , "defferred" , "fulfilled"] = "proposed"
     verdict : Optional[FounderVerdict] = None
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="after")
     def _status_verdict_consistent(self):

@@ -1,13 +1,10 @@
 
 
 
-
-
-
 {
   "schema_version": "v1",
-  "action": "Send Marta the revised qualification test matrix",
-  "owner": {"kind": "resolved", "raw_mention": "Alex","entity_id": "PERSON-0001"},
+  "statement": "Defer the second trial well to Q1",
+  "owner": {"kind": "unresolved", "raw_mention": "Alex" },
   "evidence": [
     {
       "source_id": "SRC-0046",
@@ -16,12 +13,6 @@
       "excerpt": "I'll get you the revised qualification test matrix by Friday."
     }
   ],
-  "due_text": "by Friday",
-  "confidence": 0.86,
+  "confidence": 0.8,
   "status": "proposed"
 }
-
-
-
-
-
