@@ -43,6 +43,16 @@ class ExtractionResult(BaseModel):
     commitments: list[CandidateCommitment]
     decisions: list[CandidateDecision]
     key_facts: list[CandidateKeyFact]
+
+
+class ScanResult(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    candidate_turns: list[CandidateTurn]
+
+class CandidateTurn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    turn_id: str = Field(min_length=1)          # e.g. "T-0014"
+    kind: Literal["commitment", "decision", "key_fact"]
     
 
 
