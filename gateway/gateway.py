@@ -12,8 +12,8 @@ def complete(
     prompt: str,
     data_class: str,
     config_path: str = "config/routing.yaml",
-    schema : dict | None = None
-    
+    schema : dict | None = None,
+    prompt_version: str = "v0"
 ) -> str:
     """
     Routes a task to the appropriate model provider based on configuration.
@@ -81,7 +81,7 @@ def complete(
         tier=tier,
         provider=provider,
         model=model,
-        prompt_version="v0",
+        prompt_version=prompt_version,
         outcome=outcome,
         error=error,
         payload_preview=prompt[:200] if prompt else None
