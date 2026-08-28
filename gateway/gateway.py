@@ -13,7 +13,7 @@ def complete(
     data_class: str,
     config_path: str = "config/routing.yaml",
     schema : dict | None = None,
-    prompt_version: str = "v0"
+    prompt_version: str = "v6"
 ) -> str:
     """
     Routes a task to the appropriate model provider based on configuration.
@@ -64,13 +64,23 @@ def complete(
     exception_to_raise = None
 
     try:
-        result = provider_module.chat(model, prompt , format = schema)
+        reply = provider_module.chat(model, prompt, format=schema)
+        result = reply["content"]
+        tokens_in = reply.get("tokens_in")
+        tokens_out = reply.get("tokens_out")
+        duration_ms = reply.get("duration_ms")
+        load_ms = reply.get("load_ms")
+        eval_ms = reply.get("eval_ms")
+        done_reason = reply.get("done_reason")
+        if tokens_in and tokens_in >= 30000:   # near the 32k window
+            print(f"⚠️  WARNING: tokens_in={tokens_in} near context limit")
         outcome = "success"
         error = None
     except Exception as e:
         outcome = "failure"
         error = str(e)
         result = None
+        tokens_in = tokens_out = duration_ms = load_ms = eval_ms = done_reason = None
         exception_to_raise = e
 
     # Build GatewayCall ONCE here (after the try/except)
@@ -84,6 +94,12 @@ def complete(
         prompt_version=prompt_version,
         outcome=outcome,
         error=error,
+        tokens_in = tokens_in,
+        tokens_out = tokens_out,
+        duration_ms = duration_ms,
+        load_ms = load_ms,
+        eval_ms = eval_ms,
+        done_reason = done_reason,
         payload_preview=prompt[:200] if prompt else None
     ))
 

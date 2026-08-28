@@ -19,6 +19,12 @@ class GatewayCall(BaseModel):
     error : Optional[str] = None  # the error message if the call failed
     payload_preview : Optional[str] = None  # a preview of the payload sent to the gateway
     model_config = ConfigDict(extra="forbid")
+    tokens_in: Optional[int] = None
+    tokens_out: Optional[int] = None
+    duration_ms: Optional[int] = None
+    load_ms: Optional[int] = None
+    eval_ms: Optional[int] = None
+    done_reason: Optional[str] = None
 
     @model_validator(mode="after")
     def _outcome_error_consistent(self):

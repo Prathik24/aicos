@@ -8,7 +8,7 @@ PROMPT_VERSION = "v2"
 EXTRACTION_PROMPT = """You are an extraction system for meeting transcripts. Your job is to identify COMMITMENTS and DECISIONS from the numbered transcript below and return them as JSON matching the required schema. Extract only what the transcript supports — never infer, never invent.
 
 A COMMITMENT is a promise or accepted request to perform a specific action. It requires: (a) a speaker taking ownership ("I'll...", "I can...", "I will send you..."), (b) a concrete deliverable or action, (c) directed at someone or something specific.
-
+The commitment's deliverable belongs to the OWNER unless the commitment text says otherwise. Write from the owner's perspective: "my itinerary", "the document I promised
 A DECISION is a resolution the speakers actually reached in this meeting — a choice made, not a plan discussed. "Let's go with X" is a decision. "We'll know in three months" is NOT a decision — it is a deferral.
 
 DO NOT extract:
@@ -29,8 +29,16 @@ RULES:
 - Transcripts contain transcription errors and run-on sentences. If an utterance appears garbled, extract only what is clearly asserted; put unclear fragments in the excerpt but do NOT incorporate uncertain words into the action. Lower confidence when the source is damaged.
 - If transcription damage makes part of a commitment unrecoverable, write the action with an explicit gap marker: 'Alex to send Prathik his full [unclear — likely a document or schedule]'. Never substitute a specific guessed word
 - A KEY FACT is a true, situationally important statement that is neither a promise nor a resolution: travel plans, dates, deadlines mentioned as context, the status of deals or relationships. "I'll be in Jakarta on the 17th of August" is a key fact. Key facts go in the key_facts list — never in commitments.
+- Key facts are BUSINESS facts only: deals, deadlines, travel, project status, client relationships. NEVER extract personal characteristics of individuals — appearance, religion, family, health, backgrounds — regardless of how prominent they are in the conversation.
 
 UNCERTAINTY POLICY: If a statement might be a commitment or decision but you are not sure it qualifies, INCLUDE it with confidence below 0.5 — never silently omit a possible commitment. This does not apply to the DO NOT EXTRACT categories above: those are definite exclusions. Apply the exclusion rules first; only statements that pass them are candidates for low-confidence inclusion.
+
+AN EMPTY RESULT IS VALID. Many meetings or stretches of meetings contain no commitments, no decisions, and no important facts — casual conversation, catch-ups, small talk. If the transcript contains nothing that qualifies, return empty lists. Never extract something just to have output.
+
+
+
+
+
 
 EXAMPLE INPUT:
 [T-0001 @00:05:12] Sam Lee: if the budget clears we'd probably expand the pilot

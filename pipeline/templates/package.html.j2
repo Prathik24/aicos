@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ meeting_label }} — Approval Package</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 780px;
+         margin: 2rem auto; color: #222; }
+  .card { border: 1px solid #ccc; border-radius: 8px;
+          padding: 1rem; margin-bottom: 1rem; }
+  .action { font-size: 1.1rem; font-weight: 600; }
+  .meta { color: #555; font-size: 0.9rem; }
+  .flag { padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;
+          display: inline-block; margin: 4px 0; }
+  .flag-amber { background: #fff3cd; }
+  .flag-red { background: #f8d7da; }
+  .flag-info { background: #e2e3e5; }
+  .excerpt { font-family: monospace; background: #f6f6f6;
+             padding: 6px; margin: 6px 0; font-size: 0.85rem; }
+  .verdict { margin-top: 8px; }
+  input[type=text] { width: 260px; }
+</style>
+</head>
+<body>
+<h1>{{ meeting_label }}</h1>
+<p class="meta">{{ items | length }} records for review.
+   Mark a verdict for every record.</p>
+
+{% for entry in items %}
+<div class="card">
+  <div class="action">{{ entry.title }}</div>
+  <div class="meta">
+    {{ entry.kind }} · owner: {{ entry.owner or "—" }}
+    · due:
+    {% if entry.record.due_date is defined and entry.record.due_date %}
+      {{ entry.record.due_date }}
+    {% elif entry.record.due_text is defined and entry.record.due_text %}
+      <i>{{ entry.record.due_text }} (raw — not parsed)</i>
+    {% else %} — {% endif %}
+    · conf: {{ entry.record.confidence }}
+  </div>
+
+  {% for f in entry.flags %}
+    <div class="flag flag-{{ f.rule | flag_color }}">⚠ {{ f.detail }}</div>
+  {% endfor %}
+
+  {% for ev in entry.record.evidence %}
+    <div class="excerpt">"{{ ev.excerpt }}" — [{{ ev.location }}]</div>
+  {% endfor %}
+
+  <div class="verdict">
+    <label><input type="radio" name="{{ entry.key }}" value="approve"> approve</label>
+    <label><input type="radio" name="{{ entry.key }}" value="edit"> edit</label>
+    <input type="text" name="{{ entry.key }}_edit" placeholder="edited text">
+    <label><input type="radio" name="{{ entry.key }}" value="reject"> reject</label>
+    <input type="text" name="{{ entry.key }}_reason" placeholder="reason">
+  </div>
+</div>
+{% endfor %}
+</body>
+</html>
